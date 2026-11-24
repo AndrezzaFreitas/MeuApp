@@ -9,10 +9,23 @@ import {
   ScrollView
 } from 'react-native';
 
+//importando os estilos do arquivo separado
+import{ styles} from "./styles";
+
+
+import { useWindowDimensions } from 'react-native-web';
+
 export default function App() {
   const [nome, setNome] = useState('');
   const [contador, setContador] = useState(0);
   const [temaEscuro, setTemaEscuro] = useState(false);
+
+  //Meta Diário do App
+  const meta = 10;
+  const progresso = Math.min((contador / meta) * 100, 100);
+
+  const {width} = useWindowDimensions();
+  const telaPequena = width < 380;
 
   const corFundo = temaEscuro ? '#0F172A' : '#F1F5F9';
   const corTexto = temaEscuro ? '#F8FAFC' : '#0F172A';
@@ -20,10 +33,14 @@ export default function App() {
   return (
     <View style={[styles.container, { backgroundColor: corFundo }]}>
       <StatusBar barStyle={temaEscuro ? 'light-content' : 'dark-content'} />
+
       <ScrollView contentContainerStyle={styles.conteudo}>
-        <View style={styles.cartao}>
-          <Text style={styles.titulo}>Meu Primeiro Aplicativo</Text>
-          <Text style={styles.subtitulo}>Programação Mobile I</Text>
+
+        <View style={[styles.cartao, { padding: telaPequena ? 15 : 22 }]}>
+          <Text style={[styles.titulo, { fontSize: telaPequena ? 20 : 24 }]}>
+            Meu Contador de Metas
+          </Text>
+
 
           <TextInput
             style={styles.input}
@@ -37,10 +54,26 @@ export default function App() {
             {nome.trim() ? `Olá, ${nome}!` : 'Olá, estudante!'}
           </Text>
 
-          <View style={styles.visor}>
-            <Text style={styles.rotulo}>CONTADOR</Text>
-            <Text style={styles.numero}>{contador}</Text>
+          <View style={styles.linhaMeta}>
+          <Text>Progresso da meta</Text>
+
+          <Text>
+            {contador} / {meta}
+          </Text>
           </View>
+
+          <View style={styles.barraFundo}>
+          <View
+            style={[
+              styles.barraProgresso,
+              { width: `${progresso}%` }
+            ]}
+            />
+          </View>
+
+<Text style={styles.textoProgresso}>
+  {Math.round(progresso)}% concluído
+</Text>
 
           {contador >= 10 ? (
             <Text style={styles.mensagem}>
@@ -97,122 +130,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  conteudo: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    paddingTop: 40
-  },
-  cartao: {
-    width: '100%',
-    maxWidth: 430,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 22,
-    padding: 22,
-    elevation: 4,
-    shadowColor: '#000000',
-    shadowOpacity: 0.12,
-    shadowRadius: 10
-  },
-  titulo: {
-    fontSize: 23,
-    fontWeight: '700',
-    color: '#1E3A8A',
-    textAlign: 'center'
-  },
-  subtitulo: {
-    fontSize: 15,
-    color: '#64748B',
-    textAlign: 'center',
-    marginTop: 6,
-    marginBottom: 18
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#CBD5E1',
-    borderRadius: 12,
-    padding: 13,
-    color: '#0F172A'
-  },
-  boasVindas: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#0F172A',
-    textAlign: 'center',
-    marginVertical: 15
-  },
-  visor: {
-    backgroundColor: '#EEF2FF',
-    borderRadius: 18,
-    padding: 20,
-    alignItems: 'center',
-    marginBottom: 12
-  },
-  rotulo: {
-    color: '#475569',
-    fontSize: 12,
-    fontWeight: '700'
-  },
-  numero: {
-    color: '#312E81',
-    fontSize: 52,
-    fontWeight: '800'
-  },
-  mensagem: {
-    color: '#15803D',
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: 14
-  },
-  dica: {
-    color: '#64748B',
-    textAlign: 'center',
-    marginBottom: 14
-  },
-  linhaBotoes: {
-    flexDirection: 'row',
-    marginBottom: 10
-  },
-  botao: {
-    flex: 1,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  botaoMenos: {
-    backgroundColor: '#2563EB',
-    marginRight: 6
-  },
-  botaoMais: {
-    backgroundColor: '#16A34A',
-    marginLeft: 6
-  },
-  botaoZerar: {
-    backgroundColor: '#64748B',
-    marginRight: 6
-  },
-  botaoTema: {
-    backgroundColor: '#7C3AED',
-    marginLeft: 6
-  },
-  botaoDesabilitado: {
-    opacity: 0.45
-  },
-  textoBotao: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '700'
-  },
-  rodape: {
-    marginTop: 18,
-    fontSize: 12,
-    textAlign: 'center'
-  }
-});
